@@ -1,7 +1,7 @@
-  #!/bin/bash
-  files=($(find . -mtime +2))
-  #It will create a tar of files created before last 2 days and if it is -2 the it will tar omly those files created in last two days.
-  tar -zcvf "$(date '+%y-%m-%d-%H-%M-%S').tar.gz" "${files[@]}"
-  
+#!/bin/bash
+files=($(find . -mtime -1))
+tar -cvf "$(date '+%y-%m-%d-%H-%M-%S').tar.gz" "${files[@]}"
+rm -r "${files[@]}"
+
   
   
