@@ -1,0 +1,5 @@
+#!/bin/bash
+files=($(find . -mtime -2))
+tar -cvf "$(date '+%y-%m-%d-%H-%M-%S').tar.gz" "${files[@]}"
+rm -r "${files[@]}"
+mv *.gz /opt/test
