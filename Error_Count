@@ -1,0 +1,25 @@
+#!/bin/bash
+read -p "Enter Time in minutes: " time
+
+CT=$( date +%b\ %d\ %T)
+Errors=0
+Logfile="/var/log/messages"
+
+if [[ -n "$time" ]];then
+ PT=$(( date -d "-"$time" min" ) | cut -d ' ' -f2-4)
+ echo
+ echo "Current System Time is: $CT"
+ echo
+ echo "Time before $time min was: $PT"
+else
+ echo
+ PT=$(( date -d '-30 min' ) | cut -d ' ' -f2-4)
+ echo
+ echo "Current System Time is: $CT"
+ echo
+ echo "Time before 30 min was: $PT"
+fi
+
+Errors=$(awk -v Date="$PT" '{if ($0 > Date && $0 ~ "Kernel Panic - not syncing : Attempted to \kill init|kernel: I/O error|OOM Killer|Kernel Tainted|kernel: INFO: task trafficd:.* blocked for more than \120 seconds.\$|kernel: \"\echo \0 > /proc/sys/kernel/hung_task_timeout_secs\" disables this message.\$|kernel: nfs4_reclaim_open_state: unhandled error .\* Zeroing state\$|kernel: NFS: v4 server .*  returned a bad sequence-id error!\$") print $0 }' $Logfile 2> /dev/null | wc -l)
+echo
+echo "Number of Errors are $Errors"
